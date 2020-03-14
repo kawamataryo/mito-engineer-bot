@@ -1,0 +1,126 @@
+import { App } from "@slack/bolt";
+
+const VIEW_ID = "dialog_1";
+
+const createMessageBlock = (
+  username: string,
+  userIcon: string,
+  profile: string,
+  todo: string
+) => {
+  return [
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `posted by *${username}*`
+        }
+      ]
+    },
+    {
+      type: "divider"
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `:memo: *自己紹介*\n${profile}\n\n\n:books: *今日やること*\n${todo}`
+      },
+      accessory: {
+        type: "image",
+        image_url: userIcon,
+        alt_text: "user thumbnail"
+      }
+    },
+    {
+      type: "divider"
+    }
+  ];
+};
+
+export const useMokumokuCommand = (app: App) => {
+  app.command("/mokumoku", async ({ ack, body, context, command }) => {
+    ack();
+    try {
+      const result = app.client.views.open({
+        token: context.botToken,
+        trigger_id: body.trigger_id,
+        view: {
+          type: "modal",
+          callback_id: VIEW_ID,
+          title: {
+            type: "plain_text",
+            text: "今日のもくもく"
+          },
+          blocks: [
+            {
+              type: "input",
+              block_id: "profile_block",
+              label: {
+                type: "plain_text",
+                text: "自己紹介"
+              },
+              element: {
+                type: "plain_text_input",
+                action_id: "profile_input",
+                multiline: true
+              }
+            },
+            {
+              type: "input",
+              block_id: "todo_block",
+              label: {
+                type: "plain_text",
+                text: "今日やること"
+              },
+              element: {
+                type: "plain_text_input",
+                action_id: "todo_input",
+                multiline: true
+              }
+            }
+          ],
+          private_metadata: command.channel_id,
+          submit: {
+            type: "plain_text",
+            text: "投稿"
+          }
+        }
+      });
+      console.log("dialog show result", result);
+    } catch (error) {
+      console.error("dialog show error", error);
+    }
+  });
+
+  app.view(VIEW_ID, async ({ ack, view, context, body }) => {
+    ack();
+    const values = view.state.values;
+    const channelId = view.private_metadata;
+    const profile = values.profile_block.profile_input.value;
+    const todo = values.todo_block.todo_input.value;
+
+    try {
+      // get user info
+      const { user } = await app.client.users.info({
+        token: context.botToken,
+        user: body.user.id
+      });
+      // post chanel
+      await app.client.chat.postMessage({
+        token: context.botToken,
+        channel: channelId,
+        text: "",
+        blocks: createMessageBlock(
+          (user as any).real_name,
+          (user as any).profile.image_192,
+          profile,
+          todo
+        )
+      });
+    } catch (error) {
+      console.error("post message error", error);
+    }
+  });
+};
