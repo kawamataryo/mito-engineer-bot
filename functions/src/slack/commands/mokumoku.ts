@@ -2,6 +2,13 @@ import { App } from "@slack/bolt";
 
 const VIEW_ID = "dialog_1";
 
+type User = {
+  real_name: string;
+  profile: {
+    image_192: string;
+  };
+};
+
 const createMessageBlock = (
   username: string,
   userIcon: string,
@@ -113,8 +120,8 @@ export const useMokumokuCommand = (app: App) => {
         channel: channelId,
         text: "",
         blocks: createMessageBlock(
-          (user as any).real_name,
-          (user as any).profile.image_192,
+          (user as User).real_name,
+          (user as User).profile.image_192,
           profile,
           todo
         )
