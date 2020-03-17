@@ -50,7 +50,7 @@ export const useMokumokuCommand = (app: App) => {
   app.command("/mokumoku", async ({ ack, body, context, command }) => {
     ack();
     try {
-      const result = app.client.views.open({
+      await app.client.views.open({
         token: context.botToken,
         trigger_id: body.trigger_id,
         view: {
@@ -95,9 +95,8 @@ export const useMokumokuCommand = (app: App) => {
           }
         }
       });
-      console.log("dialog show result", result);
     } catch (error) {
-      console.error("dialog show error", error);
+      console.error(error);
     }
   });
 
