@@ -1,4 +1,9 @@
 import { App } from "@slack/bolt";
+import dayjs from "dayjs";
+import * as firebase from "firebase-admin";
+
+firebase.initializeApp();
+const firestore = firebase.firestore();
 
 const VIEW_ID = "dialog_1";
 
@@ -124,6 +129,13 @@ export const useMokumokuCommand = (app: App) => {
           profile,
           todo
         )
+      });
+      // save data
+      await firestore.collection("mokumoku").add({
+        user: body.user.id,
+        user_name: (user as User).real_name,
+        profile,
+        todo
       });
     } catch (error) {
       console.error("post message error", error);
