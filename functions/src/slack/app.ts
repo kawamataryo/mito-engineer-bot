@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
 import { useMokumokuCommand } from "./commands/mokumoku";
 import { usePingCommand } from "./commands/ping";
+import { useHistoryCommand } from "./commands/history";
 
 const config = functions.config();
 
@@ -17,3 +18,4 @@ const app = new App({
 
 usePingCommand(app);
 useMokumokuCommand(app);
+useHistoryCommand(app);
