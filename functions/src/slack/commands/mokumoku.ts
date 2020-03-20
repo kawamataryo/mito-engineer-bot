@@ -1,6 +1,8 @@
 import { App } from "@slack/bolt";
 import dayjs from "dayjs";
-import { firestore } from "../lib/firestore";
+import { firestore } from "../../lib/firestore";
+import "dayjs/locale/ja";
+dayjs.locale("ja");
 
 const VIEW_ID = "dialog_1";
 
@@ -49,7 +51,7 @@ const createMessageBlock = (
 };
 
 export const useMokumokuCommand = (app: App) => {
-  app.command("/mokumoku", async ({ ack, body, context, command }) => {
+  app.command("/moku", async ({ ack, body, context, command }) => {
     ack();
     try {
       await app.client.views.open({

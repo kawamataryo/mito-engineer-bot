@@ -1,4 +1,8 @@
 import * as functions from "firebase-functions";
 import { expressReceiver } from "./slack/app";
 
-export const slack = functions.https.onRequest(expressReceiver.app);
+const REGION = "asia-northeast1";
+
+export const slack = functions
+  .region(REGION)
+  .https.onRequest(expressReceiver.app);
