@@ -1,8 +1,6 @@
 import { App } from "@slack/bolt";
-import dayjs from "dayjs";
 import { firestore } from "../../lib/firestore";
-import "dayjs/locale/ja";
-dayjs.locale("ja");
+import { localeNow } from "../../lib/localdate";
 
 const VIEW_ID = "dialog_1";
 
@@ -133,7 +131,7 @@ export const useMokumokuCommand = (app: App) => {
       await firestore.collection("mokumoku").add({
         user: body.user.id,
         user_name: (user as User).real_name,
-        date: dayjs().format("YYYY-MM-DD"),
+        date: localeNow().format("YYYY-MM-DD"),
         profile,
         todo
       });
