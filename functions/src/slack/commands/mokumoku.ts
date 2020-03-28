@@ -51,17 +51,7 @@ const createMessageBlock = (
 export const useMokumokuCommand = (app: App) => {
   app.command("/moku", async ({ ack, body, context, command }) => {
     ack();
-    let prevProfile = "";
     try {
-      // get prev profile
-      const result = await firestore
-        .collection("mokumoku")
-        .where("user", "==", command.user_id)
-        .get();
-      if (!result.empty) {
-        prevProfile = result.docs[0].data().profile;
-      }
-
       await app.client.views.open({
         token: context.botToken,
         trigger_id: body.trigger_id,
@@ -83,8 +73,7 @@ export const useMokumokuCommand = (app: App) => {
               element: {
                 type: "plain_text_input",
                 action_id: "profile_input",
-                multiline: true,
-                initial_value: prevProfile
+                multiline: true
               }
             },
             {
