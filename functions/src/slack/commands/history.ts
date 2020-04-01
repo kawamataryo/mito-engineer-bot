@@ -33,7 +33,7 @@ const createMessageBlock = (date: string, todos: string[]) => {
 
 export const useHistoryCommand = (app: App) => {
   app.command("/history", async ({ ack, body, context, command, say }) => {
-    ack();
+    await ack();
     // validate command arg
     if (command.text.length === 0) {
       say(

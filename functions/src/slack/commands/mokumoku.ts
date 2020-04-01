@@ -50,7 +50,7 @@ const createMessageBlock = (
 
 export const useMokumokuCommand = (app: App) => {
   app.command("/moku", async ({ ack, body, context, command }) => {
-    ack();
+    await ack();
     try {
       await app.client.views.open({
         token: context.botToken,
@@ -103,7 +103,7 @@ export const useMokumokuCommand = (app: App) => {
   });
 
   app.view(VIEW_ID, async ({ ack, view, context, body }) => {
-    ack();
+    await ack();
     const values = view.state.values;
     const channelId = view.private_metadata;
     const profile = values.profile_block.profile_input.value;
