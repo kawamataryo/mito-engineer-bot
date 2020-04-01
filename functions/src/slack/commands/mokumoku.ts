@@ -131,7 +131,7 @@ export const useMokumokuCommand = (app: App) => {
       await firestore.collection("mokumoku").add({
         user: body.user.id,
         user_name: (user as User).real_name,
-        date: localeNow().format("YYYY-MM-DD"),
+        date: localeNow().format("YYYY/MM/DD"),
         profile,
         todo
       });
