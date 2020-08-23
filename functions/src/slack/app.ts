@@ -8,7 +8,8 @@ const config = functions.config();
 
 export const expressReceiver = new ExpressReceiver({
   signingSecret: config.slack.secret,
-  endpoints: "/events"
+  endpoints: "/events",
+  processBeforeResponse: true
 });
 
 const app = new App({
