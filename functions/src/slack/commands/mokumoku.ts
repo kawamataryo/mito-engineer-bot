@@ -48,8 +48,27 @@ const createMessageBlock = (
   ];
 };
 
+const findPreviousProfile = async (userId: string): Promise<string> => {
+  let previousProfile = "";
+  try {
+    const snapShot = await firestore
+      .collection("mokumoku")
+      .orderBy("date", "desc")
+      .where("user", "==", userId)
+      .limit(1)
+      .get();
+    snapShot.forEach(d => {
+      previousProfile = d.data().profile;
+    });
+  } catch (e) {
+    console.error("get previous post error", e);
+  }
+  return previousProfile;
+};
+
 export const useMokumokuCommand = (app: App) => {
   app.command("/moku", async ({ ack, body, context, command }) => {
+    const profile = await findPreviousProfile(body.user_id);
     await ack();
     try {
       await app.client.views.open({
@@ -73,7 +92,8 @@ export const useMokumokuCommand = (app: App) => {
               element: {
                 type: "plain_text_input",
                 action_id: "profile_input",
-                multiline: true
+                multiline: true,
+                initial_value: profile
               }
             },
             {
