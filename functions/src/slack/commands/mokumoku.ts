@@ -48,9 +48,30 @@ const createMessageBlock = (
   ];
 };
 
+const findPreviousProfile = async (userId: string): Promise<string> => {
+  let previousProfile = "";
+  console.log("関数呼び出し");
+  try {
+    previousProfile = JSON.stringify(
+      await firestore
+        .collection("mokumoku")
+        .doc("0ypwBZV7JaUNANoHefmV")
+        .get()
+    );
+    console.log("collection 取得");
+  } catch (e) {
+    console.error("get previous post error", e);
+  }
+  console.log(previousProfile);
+  console.log("終了");
+  return previousProfile;
+};
+
 export const useMokumokuCommand = (app: App) => {
   app.command("/moku", async ({ ack, body, context, command }) => {
     await ack();
+    console.log("body", JSON.stringify(body));
+    await findPreviousProfile(body.user_id);
     try {
       await app.client.views.open({
         token: context.botToken,
