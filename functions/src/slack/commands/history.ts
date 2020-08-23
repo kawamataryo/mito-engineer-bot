@@ -36,7 +36,7 @@ export const useHistoryCommand = (app: App) => {
     await ack();
     // validate command arg
     if (command.text.length === 0) {
-      say(
+      await say(
         "引数にデータを取得したい日付を入力して下さい（例 `/history 2020/02/14`）"
       );
       return;
@@ -48,7 +48,7 @@ export const useHistoryCommand = (app: App) => {
       .where("date", "==", targetDay)
       .get();
     if (result.size === 0) {
-      say("データが見つかりません");
+      await say("データが見つかりません");
       return;
     }
 
