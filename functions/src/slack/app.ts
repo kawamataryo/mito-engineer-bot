@@ -14,7 +14,8 @@ export const expressReceiver = new ExpressReceiver({
 
 const app = new App({
   receiver: expressReceiver,
-  token: config.slack.token
+  token: config.slack.token,
+  processBeforeResponse: true
 });
 
 usePingCommand(app);
