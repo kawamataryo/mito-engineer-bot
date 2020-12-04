@@ -17,5 +17,4 @@ Open dialog and write formatted message.
 # Roadmap
 
 - [x] Integration with Firestore
-- [ ] Integration with GAS
 - [ ] Auto generate connpass page
